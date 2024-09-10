@@ -34,7 +34,7 @@ def download_video():
     # Get start_time and end_time from the request parameters
     start_time = request.args.get('start_time')
     end_time = request.args.get('end_time')
-    channel = request.args.get('channel')
+    # channel = request.args.get('channel')
 
     if not start_time or not end_time:
         return jsonify({"error": "start_time and end_time parameters are required"}), 400
@@ -61,12 +61,19 @@ def download_video():
                 for chunk in response.iter_content(chunk_size=1024):
                     if chunk:
                         f.write(chunk)
+                        
+            # Get the file size to ensure that some data was downloaded
+            file_size = os.path.getsize(file_path)
+            if file_size == 0:
+                os.remove(file_path)  # Delete the empty file
+                return jsonify({"error": "No video data available for the requested time range."}), 404
 
             # Return the public file path
-            # public_url = f"/videos/{file_name}"
             public_url = f"{request.host_url}videos/{file_name}"
+            print(f"Success response: {response}")
             return jsonify({"message": "Video downloaded", "file_path": public_url}), 200
         else:
+            print(f"Failed to download video. Status code: {response}")
             return jsonify({"error": f"Failed to download video. Status code: {response.status_code}"}), 500
 
     except Exception as e:

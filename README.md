@@ -1,0 +1,1 @@
+Example API url: 192.168.100.98:5000/download_video?start_time=2024-09-10&12:30:00&end_time=2024-09-10&12:31:00
