@@ -12,8 +12,8 @@ app = Flask(__name__)
 camera_ip = "182.252.71.29"
 username = "admin"
 password = "Al@#2024"
-# channel = 1
-# subtype = 0
+channel = 1
+subtype = 0
 file_type = "mp4"
 
 # Get the absolute path of the directory where videos will be saved
@@ -37,6 +37,7 @@ def download_video():
     end_time = request.args.get('end_time')
     channel = request.args.get('channel')
     subtype = request.args.get('subtype')
+    print(f'start_time: {start_time}, end_time: {end_time}, channel: {channel}, subtype: {subtype}')
 
     if not start_time or not end_time:
         return jsonify({"error": "start_time and end_time parameters are required"}), 400
