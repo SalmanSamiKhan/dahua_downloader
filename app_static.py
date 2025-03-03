@@ -5,13 +5,16 @@ from requests.auth import HTTPDigestAuth
 from flask import Flask, request, jsonify, send_from_directory, Response
 import time
 from datetime import datetime
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
-# Dahua ONVIF camera details
-camera_ip = "182.252.71.29"
-username = "admin"
-password = "Al@#2024"
+# Dahua ONVIF camera details from .env
+camera_ip = os.getenv("CAMERA_IP")
+username = os.getenv("CAMERA_USERNAME")
+password = os.getenv("CAMERA_PASSWORD")
 channel = 1
 subtype = 0
 file_type = "mp4"

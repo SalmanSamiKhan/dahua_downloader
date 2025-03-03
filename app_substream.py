@@ -60,36 +60,23 @@ def download_video():
         if response.status_code == 200:
             # Generate a unique file name for saving the video
             current_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-            original_file_name = f"{current_time}.{file_type}"
-            original_file_path = os.path.join(SAVE_DIR, original_file_name)
+            file_name = f"{current_time}.{file_type}"
+            file_path = os.path.join(SAVE_DIR, file_name)
 
             # Save the video file
-            with open(original_file_path, 'wb') as f:
+            with open(file_path, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=1024):
                     if chunk:
                         f.write(chunk)
-            
-                        # Prepare the new file name for faststart processing
-            processed_file_name = f"{current_time}_processed.{file_type}"
-            processed_file_path = os.path.join(SAVE_DIR, processed_file_name)
-
-            # Run ffmpeg to move moov atom to the start of the file
-            ffmpeg_command = [
-                'ffmpeg', '-i', original_file_path, '-movflags', 'faststart', '-c', 'copy', processed_file_path
-            ]
-            subprocess.run(ffmpeg_command, check=True)
-
-            # Delete the original file after processing
-            os.remove(original_file_path)
                         
             # Get the file size to ensure that some data was downloaded
-            file_size = os.path.getsize(processed_file_path)
+            file_size = os.path.getsize(file_path)
             if file_size == 0:
-                os.remove(processed_file_path)  # Delete the empty file
+                os.remove(file_path)  # Delete the empty file
                 return jsonify({"error": "No video data available for the requested time range."}), 404
 
             # Return the public file path
-            public_url = f"{request.host_url}videos/{processed_file_name}"
+            public_url = f"{request.host_url}videos/{file_name}"
             print(f"Success response: {response}")
             return jsonify({"message": "Video downloaded", "stream_url": public_url}), 200
         else:

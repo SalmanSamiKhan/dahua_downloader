@@ -2,10 +2,14 @@ import requests
 from requests.auth import HTTPDigestAuth
 import time
 
-# Dahua ONVIF camera details
-camera_ip = "182.252.71.29"
-username = "admin"
-password = "Al@#2024"
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
+
+# Dahua ONVIF camera details from .env
+camera_ip = os.getenv("CAMERA_IP")
+username = os.getenv("CAMERA_USERNAME")
+password = os.getenv("CAMERA_PASSWORD")
 channel = 1
 start_time = "2024-09-05 16:00:00"
 end_time = "2024-09-05 16:01:00"
